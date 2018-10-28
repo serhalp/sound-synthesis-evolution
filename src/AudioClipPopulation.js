@@ -57,8 +57,10 @@ export class RandomAudioClipPopulation extends AudioClipPopulation {
     return getRandomFrequencies(3);
   }
 }
+RandomAudioClipPopulation.description =
+  "Random independent clips - no evolution";
 
-export class LolAudioClipPopulation extends AudioClipPopulation {
+export class BasicMutationAudioClipPopulation extends AudioClipPopulation {
   generateNewClip() {
     // Randomize the first few.
     if (this.clips.length < 10) return getRandomFrequencies(3);
@@ -77,3 +79,5 @@ export class LolAudioClipPopulation extends AudioClipPopulation {
     return mutatedNotes;
   }
 }
+BasicMutationAudioClipPopulation.description =
+  "Rudimentary mutation of previous candidates";

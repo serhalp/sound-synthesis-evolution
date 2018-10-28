@@ -81,13 +81,13 @@ export default App;
 const Intro = ({ strategies, handleStart }) => (
   <section>
     <p>Select a strategy to start.</p>
-    {strategies.map(strategy => (
+    {strategies.map((strategy, i) => (
       <button
-        key={strategy.name}
+        key={i}
         className="button start-button"
         onClick={() => handleStart(strategy)}
       >
-        {strategy.name}
+        {strategy.description}
       </button>
     ))}
   </section>
