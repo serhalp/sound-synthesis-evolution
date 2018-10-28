@@ -62,5 +62,5 @@ const volume = 1;
 const attack = 1;
 const release = 100;
 
-const MIN_FREQUENCY = 16; // ~16 Hz is lowest humans can generally hear
-const MAX_FREQUENCY = 16000; // ~16000 is highest humans can generally hear
+const MIN_FREQUENCY = 250; // ~16 Hz is lowest humans can generally hear
+const MAX_FREQUENCY = 500; // ~16000 is highest humans can generally hear
