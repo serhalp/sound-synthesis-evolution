@@ -1,4 +1,4 @@
-import { delay } from "./util";
+import { times, randomInRange, delay } from "./util";
 
 function initialize() {
   if (context != null) return;
@@ -49,14 +49,12 @@ export async function playFrequencies(frequencies) {
   }
 }
 
-export function getRandomFrequency() {
-  return Math.random() * (MAX_FREQUENCY + MIN_FREQUENCY) - MIN_FREQUENCY;
+export function getRandomFrequency(min = MIN_FREQUENCY, max = MAX_FREQUENCY) {
+  return randomInRange(min, max);
 }
 
-export function getRandomFrequencies(num) {
-  const frequencies = [];
-  for (let i = 0; i < num; ++i) frequencies.push(getRandomFrequency());
-  return frequencies;
+export function getRandomFrequencies(num, min, max) {
+  return times(num, () => getRandomFrequency(min, max));
 }
 
 let context = null;

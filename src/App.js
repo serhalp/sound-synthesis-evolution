@@ -3,7 +3,7 @@ import "./App.css";
 import React, { Component } from "react";
 
 import { playFrequencies } from "./audio";
-import { RandomAudioClipPopulation } from "./AudioClipPopulation";
+import * as strategyByName from "./AudioClipPopulation";
 
 class App extends Component {
   constructor() {
@@ -28,7 +28,7 @@ class App extends Component {
         {this.state.started ? (
           <section className="App-container">
             <Leaderboard
-              clips={this.state.audioClipPopulation.getBestClips()}
+              clips={this.state.audioClipPopulation.getBestClipsSorted()}
               handlePlayAudioClip={this.handlePlayAudioClip.bind(this)}
             />
             <EvolutionStep
@@ -42,7 +42,7 @@ class App extends Component {
           </section>
         ) : (
           <Intro
-            strategies={strategies}
+            strategies={Object.values(strategyByName)}
             handleStart={this.handleStart.bind(this)}
           />
         )}
@@ -83,6 +83,7 @@ const Intro = ({ strategies, handleStart }) => (
     <p>Select a strategy to start.</p>
     {strategies.map(strategy => (
       <button
+        key={strategy.name}
         className="button start-button"
         onClick={() => handleStart(strategy)}
       >
@@ -133,12 +134,10 @@ const Leaderboard = ({ clips, handlePlayAudioClip }) => (
       {clips.map(clip => (
         <AudioClip
           key={clip.id}
-          label={clip.label}
+          label={`${clip.label} (x${clip.votes})`}
           handlePlay={() => handlePlayAudioClip(clip.id)}
         />
       ))}
     </div>
   </div>
 );
-
-const strategies = [RandomAudioClipPopulation];
