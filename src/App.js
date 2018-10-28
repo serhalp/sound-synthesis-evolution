@@ -64,13 +64,13 @@ class App extends Component {
     const clip = this.state.clips.find(clip => clip.id === id);
     // TODO don't mutate? but splicing out of an array without mutation is a pain.
     clip.selected = true;
-    this.setState({
-      step: this.state.step + 1,
+    this.setState(previousState => ({
+      step: previousState.step + 1,
       clips: [
-        ...this.state.clips,
-        ...this.generateClipsForStep(this.state.step + 1)
+        ...previousState.clips,
+        ...this.generateClipsForStep(previousState.step + 1)
       ]
-    });
+    }));
   }
 
   generateClipsForStep(step) {
