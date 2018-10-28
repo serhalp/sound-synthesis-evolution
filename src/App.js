@@ -2,7 +2,8 @@ import "./App.css";
 
 import React, { Component } from "react";
 
-import { getRandomFrequencies, playFrequencies } from "./audio";
+import { playFrequencies } from "./audio";
+import AudioClipPopulation from "./AudioClipPopulation";
 
 class App extends Component {
   constructor() {
@@ -10,7 +11,7 @@ class App extends Component {
     this.state = {
       started: false,
       step: null,
-      clips: []
+      audioClipPopulation: null
     };
   }
 
@@ -27,13 +28,13 @@ class App extends Component {
         {this.state.started ? (
           <section className="App-container">
             <Leaderboard
-              clips={this.state.clips.filter(({ selected }) => selected)}
+              clips={this.state.audioClipPopulation.getBestClips()}
               handlePlayAudioClip={this.handlePlayAudioClip.bind(this)}
             />
             <EvolutionStep
               step={this.state.step}
-              clips={this.state.clips.filter(
-                ({ step }) => step === this.state.step
+              clips={this.state.audioClipPopulation.getClipsForStep(
+                this.state.step
               )}
               handlePlayAudioClip={this.handlePlayAudioClip.bind(this)}
               handleSelectAudioClip={this.handleSelectAudioClip.bind(this)}
@@ -47,40 +48,28 @@ class App extends Component {
   }
 
   handleStart() {
-    this.setState({
-      started: true,
-      step: 0,
-      clips: [...this.generateClipsForStep(0)]
+    this.setState(previousState => {
+      return {
+        started: true,
+        step: 0,
+        audioClipPopulation: new AudioClipPopulation()
+      };
     });
   }
 
   handlePlayAudioClip(id) {
-    const { notes } = this.state.clips.find(clip => clip.id === id);
+    const { notes } = this.state.audioClipPopulation.getClipById(id);
     playFrequencies(notes);
   }
 
   handleSelectAudioClip(id) {
-    // TODO probably should store by id somewhere
-    const clip = this.state.clips.find(clip => clip.id === id);
-    // TODO don't mutate? but splicing out of an array without mutation is a pain.
-    clip.selected = true;
-    this.setState(previousState => ({
-      step: previousState.step + 1,
-      clips: [
-        ...previousState.clips,
-        ...this.generateClipsForStep(previousState.step + 1)
-      ]
-    }));
-  }
-
-  generateClipsForStep(step) {
-    return ["A", "B"].map(clipSequenceId => ({
-      id: `${step}${clipSequenceId}`,
-      label: `${step}${clipSequenceId}`,
-      step,
-      selected: false,
-      notes: getRandomFrequencies(3)
-    }));
+    this.state.audioClipPopulation.markClipSelected(id);
+    this.setState(previousState => {
+      previousState.audioClipPopulation.addClipsForStep(previousState.step + 1);
+      return {
+        step: previousState.step + 1
+      };
+    });
   }
 }
 
