@@ -1,6 +1,6 @@
 import { getRandomFrequencies } from "./audio";
 
-export default class AudioClipPopulation {
+class AudioClipPopulation {
   constructor() {
     this.clips = [];
     this.addClipsForStep(0);
@@ -16,8 +16,12 @@ export default class AudioClipPopulation {
       label: `${step}${clipSequenceId}`,
       step,
       selected: false,
-      notes: getRandomFrequencies(3)
+      notes: this.generateNewClip()
     }));
+  }
+
+  generateNewClip() {
+    throw new Error("not implemented");
   }
 
   getClipById(id) {
@@ -26,7 +30,7 @@ export default class AudioClipPopulation {
   }
 
   getBestClips() {
-    return this.clips.filter(({ selected }) => selected);
+    throw new Error("not implemented");
   }
 
   getClipsForStep(step) {
@@ -37,5 +41,15 @@ export default class AudioClipPopulation {
     // TODO don't mutate? but splicing out of an array without mutation is a pain.
     const clip = this.getClipById(id);
     clip.selected = true;
+  }
+}
+
+export class RandomAudioClipPopulation extends AudioClipPopulation {
+  generateNewClip() {
+    return getRandomFrequencies(3);
+  }
+
+  getBestClips() {
+    return this.clips.filter(({ selected }) => selected);
   }
 }

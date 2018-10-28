@@ -3,7 +3,7 @@ import "./App.css";
 import React, { Component } from "react";
 
 import { playFrequencies } from "./audio";
-import AudioClipPopulation from "./AudioClipPopulation";
+import { RandomAudioClipPopulation } from "./AudioClipPopulation";
 
 class App extends Component {
   constructor() {
@@ -41,18 +41,21 @@ class App extends Component {
             />
           </section>
         ) : (
-          <Intro handleStart={this.handleStart.bind(this)} />
+          <Intro
+            strategies={strategies}
+            handleStart={this.handleStart.bind(this)}
+          />
         )}
       </div>
     );
   }
 
-  handleStart() {
+  handleStart(AudioClipPopulationStrategyImpl) {
     this.setState(previousState => {
       return {
         started: true,
         step: 0,
-        audioClipPopulation: new AudioClipPopulation()
+        audioClipPopulation: new AudioClipPopulationStrategyImpl()
       };
     });
   }
@@ -75,10 +78,18 @@ class App extends Component {
 
 export default App;
 
-const Intro = ({ handleStart }) => (
-  <button className="button start-button" onClick={handleStart}>
-    Start
-  </button>
+const Intro = ({ strategies, handleStart }) => (
+  <section>
+    <p>Select a strategy to start.</p>
+    {strategies.map(strategy => (
+      <button
+        className="button start-button"
+        onClick={() => handleStart(strategy)}
+      >
+        {strategy.name}
+      </button>
+    ))}
+  </section>
 );
 
 const EvolutionStep = ({
@@ -129,3 +140,5 @@ const Leaderboard = ({ clips, handlePlayAudioClip }) => (
     </div>
   </div>
 );
+
+const strategies = [RandomAudioClipPopulation];
